@@ -1,0 +1,228 @@
+{{ define "title" }}Dashboard{{ end }}
+
+{{ define "content" }}
+<div class="container pt-4">
+
+    {{ if .u }}
+    <section class="mb-4">
+        <div class="card">
+            <div class="card-header py-3 bg-dark text-white">
+                <h5 class="mb-0 text-center"><strong>Data of {{ .u.Username }}</strong></h5>
+            </div>
+            <div class="card-body">
+                <form action="" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="id" value="{{ .u.ID }}">
+                    <div class="row mb-4">
+                        <div class="col">
+                            <div class="form-outline">
+                                <input type="text" name="first_name" id="first_name" class="form-control"
+                                    value="{{ .u.FirstName }}">
+                                <label for="first_name" class="form-label">First name</label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-outline">
+                                <input type="text" name="last_name" id="last_name" class="form-control"
+                                    value="{{ .u.LastName }}">
+                                <label for="last_name" class="form-label">Last name</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col">
+                            <div class="form-outline">
+                                <input type="text" name="username" id="username" class="form-control"
+                                    value="{{ .u.Username }}" required>
+                                <label for="username" class="form-label">Username</label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-outline">
+                                <input type="email" name="email" id="email" class="form-control" value="{{ .u.Email }}"
+                                    required>
+                                <label for="email" class="form-label">Email</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4 justify-content-center">
+                        <div class="col-lg-6">
+                            <div class="form-outline">
+                                <input type="text" name="password" id="password" size="10" class="form-control"
+                                    value="{{ .u.Password }}" readonly>
+                                <label for="password" class="form-label">Password</label>
+                                <div class="form-helper">Password is readonly</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4 justify-content-center">
+                        <div class="col-lg-6">
+                            <div class="form-check">
+                                <input type="checkbox" name="is_superuser" id="is_superuser" class="form-check-input"
+                                    value="{{ if .u.IsSuperuser }}true{{ else }}false{{ end }}" {{ if .u.IsSuperuser
+                                    }}checked{{ end }}>
+                                <label for="is_superuser" class="form-check-label">Is Superuser</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" name="is_staff" id="is_staff" class="form-check-input"
+                                    value="{{ if .u.IsStaff }}true{{ else }}false{{ end }}" {{ if .u.IsStaff }}checked{{
+                                    end }}>
+                                <label for="is_staff" class="form-check-label">Is Staff</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" name="is_active" id="is_active" class="form-check-input"
+                                    value="{{ if .u.IsActive }}true{{ else }}false{{ end }}" {{ if .u.IsActive
+                                    }}checked{{ end }}>
+                                <label for="is_active" class="form-check-label">Is Active</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" name="is_online" id="is_online" class="form-check-input"
+                                    value="{{ if .u.IsOnline }}true{{ else }}false{{ end }}" {{ if .u.IsOnline
+                                    }}checked{{ end }} disabled>
+                                <label for="is_online" class="form-check-label">Is Online</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col">
+                            <div class="form-outline">
+                                <i class="fas fa-calendar trailing"></i>
+                                <input type="datetime" name="last_login" id="last_login"
+                                    class="form-control form-icon-trailing" value="{{ .u.LastLogin }}">
+                                <label for="last_login" class="form-label">Last login</label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-outline">
+                                <i class="fas fa-calendar trailing"></i>
+                                <input type="datetime" name="date_joined" id="date_joined"
+                                    class="form-control form-icon-trailing" value="{{ .u.DateJoined }}">
+                                <label for="date_joined" class="form-label">Date Joined</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-end">
+                        <div>
+                            <button type="submit" class="btn btn-primary">Save and edit again</button>
+                            &nbsp;
+                            <button type="reset" class="btn btn-danger">Canceling editing and back to menu</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+    {{ end }}
+
+    {{ if .room }}
+    <section class="mb-4">
+        <div class="card shadow">
+            <div class="card-header bg-dark py-3 text-white">
+                <h5 class="mb-0 text-center">Data of {{ .room.Name }}'s Room</h5>
+            </div>
+            <div class="card-body">
+                <form action="" method="post" enctype="multipart/form-data">
+                    <div class="row mb-4">
+                        <div class="col">
+                            <input type="hidden" name="id" value="{{ .room.ID }}">
+                            <div class="form-outline">
+                                <input type="text" name="name" id="name" class="form-control" value="{{ .room.Name }}">
+                                <label for="name" class="form-label">Name</label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-outline">
+                                <input type="number" name="mentor_id" id="mentor_id" class="form-control"
+                                    value="{{ .room.MentorID }}" required>
+                                <label for="mentor_id" class="form-label">Mentor ID</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="members">Add Members</label>
+                                <select class="form-select" aria-label="Default select example" name="members"
+                                    id="members" multiple>
+                                    <option></option>
+                                    {{ range .users }}
+                                    <option value="{{ .ID }}">{{ .Username }}</option>
+                                    {{ end }}
+                                </select>
+                                <div class="form-text">Press CTRL+LR for multiple choose.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col">
+                            <label for="logo" class="form-label">Logo</label>
+                            <input type="file" name="logo" id="logo" class="form-control">
+                            <div class="form-text"><a href="{{ .room.Logo }}">{{ .room.Logo }}</a></div>
+                        </div>
+                        <div class="col">
+                            <div class="form-outline">
+                                <textarea name="desc" id="desc" cols="30" rows="5" class="form-control" maxlength="255"
+                                    aria-valuemax="255">
+                                </textarea>
+                                <script>
+                                    document.querySelector("#desc").value = "{{ .room.Desc }}";
+                                </script>
+                                <label for="desc" class="form-label">Description</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col">
+                            <div class="form-outline">
+                                <textarea name="content" id="content" cols="30" rows="10"
+                                    class="form-control"></textarea>
+                                <script>
+                                    document.querySelector("#content").value = "{{ .room.Content }}";
+                                </script>
+                                <label for="content" class="form-label">Content</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col">
+                            <div class="form-outline">
+                                <i class="fas fa-calendar trailing"></i>
+                                <input type="datetime" name="updated_at" id="updated_at"
+                                    class="form-control form-icon-trailing" value=" {{ .room.UpdatedAt }}">
+                                <label for="updated_at" class="form-label">Updated At</label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-outline">
+                                <i class="fas fa-calendar trailing"></i>
+                                <input type="datetime" name="created_at" id="created_at"
+                                    class="form-control form-icon-trailing" value=" {{ .room.CreatedAt }}" readonly>
+                                <label for="created_at" class="form-label">Created At</label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-outline">
+                                <i class="fas fa-calendar trailing"></i>
+                                <input type="datetime" name="deleted_at" id="deleted_at"
+                                    class="form-control form-icon-trailing" value=" {{ .room.CreatedAt }}" readonly>
+                                <label for="deleted_at" class="form-label">Deleted At</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-end">
+                        <div>
+                            <button type="submit" class="btn btn-primary">Save and edit again</button>
+                            &nbsp;
+                            <button type="reset" class="btn btn-danger">Canceling editing and back to menu</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+    {{ end }}
+</div>
+{{ end }}

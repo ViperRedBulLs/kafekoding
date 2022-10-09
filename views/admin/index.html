@@ -1,0 +1,216 @@
+{{ define "title" }}Dashboard{{ end }}
+
+{{ define "active_index" }}active{{ end }}
+
+{{ define "content" }}
+<div class="container pt-4">
+
+    <!-- Tabs navs -->
+    <ul class="nav nav-tabs mb-3" id="ex-with-icons" role="tablist">
+        <li class="nav-item" role="presentation">
+            <a class="nav-link active" id="ex-with-icons-tab-1" data-mdb-toggle="tab" href="#ex-with-icons-tabs-1"
+                role="tab" aria-controls="ex-with-icons-tabs-1" aria-selected="true"><i
+                    class="fas fa-chart-pie fa-fw me-2"></i>Dashboard</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="ex-with-icons-tab-2" data-mdb-toggle="tab" href="#ex-with-icons-tabs-2" role="tab"
+                aria-controls="ex-with-icons-tabs-2" aria-selected="false"><i class="fas fa-user fa-fw me-2"></i>Users
+                Table</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="ex-with-icons-tab-3" data-mdb-toggle="tab" href="#ex-with-icons-tabs-3" role="tab"
+                aria-controls="ex-with-icons-tabs-3" aria-selected="false"><i class="fas fa-house fa-fw me-2"></i>Rooms
+                Table</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="ex-with-icons-tab-4" data-mdb-toggle="tab" href="#ex-with-icons-tabs-4" role="tab"
+                aria-controls="ex-with-icons-tabs-4" aria-selected="false"><i class="fas fa-house fa-fw me-2"></i>Course
+                Table</a>
+        </li>
+    </ul>
+    <!-- Tabs navs -->
+
+    <!-- Tabs content -->
+    <div class="tab-content" id="ex-with-icons-content">
+
+        <div class="tab-pane fade show active" id="ex-with-icons-tabs-1" role="tabpanel"
+            aria-labelledby="ex-with-icons-tab-1">
+            <!-- <div class="card">
+                <div class="card-header">
+                    <h5 class="text-center card-title">Dashboard</h5>
+                </div>
+                <div class="card-body">
+                    <canvas class="my-4 w-100" id="myChart" height="380"></canvas>
+                </div>
+            </div> -->
+            <div class="row mb-2 mt-4">
+                <div class="card">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="text-center card-title">Count</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas class="my-4 w-100" id="countChart" height="380"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User -->
+        <div class="tab-pane fade" id="ex-with-icons-tabs-2" role="tabpanel" aria-labelledby="ex-with-icons-tab-2">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title text-center">Users Table</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Username</th>
+                                    <th scope="col">First name</th>
+                                    <th scope="col">Last name</th>
+                                    <th scope="col">Email</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{ range .users }}
+                                <tr>
+                                    <th scope="row"><a href="/admin/detail?table_name=users&field_id={{ .ID }}">{{
+                                            .Username }}</a></th>
+                                    <td>{{ .FirstName }}</td>
+                                    <td>{{ .LastName }}</td>
+                                    <td>{{ .Email }}</td>
+                                </tr>
+                                {{ end }}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Room -->
+        <div class="tab-pane fade" id="ex-with-icons-tabs-3" role="tabpanel" aria-labelledby="ex-with-icons-tab-3">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title text-center">Rooms Table</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Mentor ID</th>
+                                    <th scope="col">Updated At</th>
+                                    <th scope="col">Created At</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{ range .rooms }}
+                                <tr>
+                                    <th scope="row"><a href="/admin/detail?table_name=rooms&field_id={{ .ID }}">{{ .Name
+                                            }}</a></th>
+                                    <td>{{ .MentorID }}</td>
+                                    <td>{{ .UpdatedAt }}</td>
+                                    <td>{{ .CreatedAt }}</td>
+                                </tr>
+                                {{ end }}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="ex-with-icons-tabs-4" role="tabpanel" aria-labelledby="ex-with-icons-tab-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title text-center">Users Table</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Title</th>
+                                    <th scope="col">Room ID</th>
+                                    <th scope="col">Updated At</th>
+                                    <th scope="col">Deleted At</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{ range .courses }}
+                                <tr>
+                                    <th scope="row"><a href="#">{{ .Title }}</a></th>
+                                    <td>{{ .RoomID }}</td>
+                                    <td>{{ .UpdatedAt }}</td>
+                                    <td>{{ .CreatedAt }}</td>
+                                </tr>
+                                {{ end }}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- Tabs content -->
+</div>
+{{ end }}
+
+{{ define "script" }}
+<script>
+    // Graph
+    var ctx = document.getElementById("countChart");
+
+    var myChart = new Chart(ctx, {
+        type: "line",
+        data: {
+            labels: [
+                "Users",
+                "Rooms",
+                "Courses",
+                "Comments",
+            ],
+            datasets: [
+                {
+                    data: [
+                        "{{ .countUser }}",
+                        "{{ .countRoom }}",
+                        "{{ .countCourse }}",
+                        "{{ .countComment }}",
+                    ],
+                    lineTension: 0,
+                    backgroundColor: "transparent",
+                    borderColor: "#007bff",
+                    borderWidth: 4,
+                    pointBackgroundColor: "#007bff",
+                },
+            ],
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: "Line Chart for Counting Fields",
+                }
+            },
+            scales: {
+                yAxes: [
+                    {
+                        ticks: {
+                            beginAtZero: false,
+                        },
+                    },
+                ],
+            },
+            legend: {
+                display: false,
+            },
+        },
+    });
+</script>
+{{ end }}

@@ -1,0 +1,72 @@
+{{ define "title" }}Home{{ end }}
+
+{{ define "content" }}
+<div class="container">
+    <div class="row mt-5">
+        {{ if .user.isSuperuser }}
+        <div class="d-flex align-items-center justify-content-between mb-2">
+            <button type="button" data-mdb-toggle="modal" data-mdb-target="#addRoomAction" class="btn btn-primary">Add
+                Room</button>
+        </div>
+        <div class="modal fade" id="addRoomAction" tabindex="-1" aria-labelledby="addRoomActionLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addRoomActionLabel">Add New Room</h5>
+                        <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="" method="post" enctype="multipart/form-data">
+                            <div class="form-group mb-2">
+                                <label for="name">Name</label>
+                                <input type="text" name="name" id="name" class="form-control" required>
+                            </div>
+                            <div class="form-group mb-2">
+                                <label for="logo">Logo</label>
+                                <input type="file" name="logo" id="logo" class="form-control" required>
+                                <div class="form-text">Please only image file.</div>
+                            </div>
+                            <div class="form-group mb-2">
+                                <label for="desc">Description</label>
+                                <input type="text" name="desc" id="desc" class="form-control" required>
+                            </div>
+                            <div class="form-group mb-2">
+                                <label for="content">Content</label>
+                                <textarea name="content" id="content" class="form-control"></textarea>
+                            </div>
+                            <button class="btn btn-primary" type="submit">Save</button>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{ end }}
+
+        {{ if .flash.Type }}
+        <div class="alert alert-{{ .flash.Type }}">
+            {{ .flash.Message }}
+        </div>
+        {{ end }}
+
+        {{ range .rooms }}
+        <div class="col-lg-4 mb-2">
+            <div class="card shadow h-100">
+                <div class="card-header">
+                    <h5 class="card-title">{{ .Name }}</h5>
+                </div>
+                <img src="{{ .Logo }}" alt="{{ .Name }}" class="card-img-top">
+                <div class="card-body">
+                    <p>{{ .Desc }}</p>
+                    <a href="/room/{{ .Name }}" class="btn btn-primary">Enter</a>
+                </div>
+            </div>
+        </div>
+        {{ end }}
+    </div>
+</div>
+{{ end }}

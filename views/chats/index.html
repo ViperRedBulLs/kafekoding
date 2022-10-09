@@ -1,0 +1,40 @@
+{{ define "title" }}Chat Groups{{ end }}
+
+{{ define "content" }}
+<div class="container">
+    <div class="row justify-content-center mt-5">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-dark text-white">
+                    <h3 class="card-title text-center">Chat Groups</h3>
+                </div>
+            </div>
+
+            {{ if .flash.Type }}
+            <div class="alert alert-{{ .flash.Type }} my-4">
+                {{ .flash.Message }}
+            </div>
+            {{ end }}
+
+            <div class="row mt-4">
+                {{ $username := .user.username }}
+                {{ range .rooms }}
+                <div class="col-sm-6">
+                    <div class="card shadow">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ .Name }}</h5>
+                            <p>Member: {{ .Members | countUserMembers }}</p>
+                            {{ if isJoinedRoom $username .Members }}
+                            <a href="/chat/{{ .ID }}" class="btn btn-info">Enter</a>
+                            {{ else }}
+                            <a href="/chat?type=join&room_id={{ .ID }}" class="btn btn-primary">Join</a>
+                            {{ end }}
+                        </div>
+                    </div>
+                </div>
+                {{ end }}
+            </div>
+        </div>
+    </div>
+</div>
+{{ end }}

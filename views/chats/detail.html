@@ -1,0 +1,257 @@
+{{ define "title" }}Chat Room |{{ .room.Name }}|{{ end }}
+
+{{ define "style" }}
+<style>
+    #chat-logs {
+        overflow: scroll;
+        width: 100%;
+        height: 350px;
+    }
+
+    #chat-logs .right {
+        width: 65%;
+        float: right;
+        border: 1px solid #000;
+        border-top-right-radius: 1.5rem;
+        border-top-left-radius: 1.5rem;
+        border-bottom-left-radius: 1.5rem;
+        margin-bottom: 2rem;
+        transition: 1s ease all;
+    }
+
+    #chat-logs .right div,
+    #chat-logs .left div {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: white;
+        padding: 10px;
+        border-top-left-radius: 1.5rem;
+        border-top-right-radius: 1.5rem;
+    }
+
+    #chat-logs .right div {
+        background-color: rgb(48, 34, 34);
+    }
+
+    #chat-logs p {
+        padding: 10px;
+    }
+
+    #chat-logs .left div {
+        background-color: rgb(201, 99, 99);
+    }
+
+    #chat-logs .left {
+        width: 65%;
+        float: left;
+        border: 1px solid #000;
+        border-top-right-radius: 1.5rem;
+        border-top-left-radius: 1.5rem;
+        border-bottom-right-radius: 1.5rem;
+        margin-bottom: 2rem;
+        transition: 1s ease all;
+    }
+</style>
+{{ end }}
+
+{{ define "content" }}
+<div class="container-fluid">
+    <div class="row mt-3">
+        <div class="col-lg-8 mb-4">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="card-title text-center">{{ .room.Name }}</h3>
+                </div>
+                <div class="card-body">
+                    <div id="chat-logs">
+                        {{ $userID := .user.id }}
+                        {{ range .chats }}
+                        {{ if isUserByID $userID .SenderID }}
+                        <div class="right">
+                            <div>
+                                <h5>You</h5>
+                                <span>{{ .SendAt | timeKitchen }}</span>
+                            </div>
+                            <p>{{ .Text }}</p>
+                        </div>
+                        {{ else }}
+                        <div class="left">
+                            <div>
+                                <h5>{{ .SenderID | getUserFullNameByID }}</h5>
+                                <span>{{ .SendAt | timeKitchen }}</span>
+                            </div>
+                            <p>{{ .Text }}</p>
+                        </div>
+                        {{ end }}
+                        {{ end }}
+                    </div>
+                    <form action="" method="post">
+                        <textarea id="message-input" class="form-control"></textarea>
+                        <button type="button" id="message-button" class="btn btn-primary">Send</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow mb-3">
+                <div class="card-header">
+                    <h5 class="card-title">Admin</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item list-group-item-action">{{ .userAdmin.Username }} | <strong>{{
+                                .userAdmin.FirstName }} {{ .userAdmin.LastName
+                                }}</strong></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card shadow mb-3">
+                <div class="card-header">
+                    <h5 class="card-title">Members</h5>
+                    <span class="text-muted">{{ .room.Members | countUserMembers }} Member</span>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        {{ range .room.Members }}
+                        <li class="list-group-item list-group-item-action">
+                            {{ .Username }} | <strong>{{ .FirstName }} {{ .LastName }}</strong>
+                        </li>
+                        {{ end }}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{ end }}
+
+{{ define "script" }}
+<script>
+
+    let log = document.getElementById("chat-logs");
+
+    window.onload = function () {
+        log.scrollTop = log.scrollHeight;
+    }
+
+    document.querySelector("#message-input").focus();
+
+    function appendLog(item) {
+        var doScroll = log.scrollTop > log.scrollHeight - log.clientHeight - 1;
+        log.appendChild(item);
+        if (doScroll) {
+            log.scrollTop = log.scrollHeight - log.clientHeight;
+        }
+    }
+
+    const ws = new WebSocket(
+        "ws://" +
+        window.location.host +
+        "/backends/ws/chat?room={{ .room.ID }}"
+    );
+
+    ws.onopen = evt => {
+        console.log(evt);
+    }
+
+    ws.onclose = evt => {
+        console.log("Websocket closed...");
+    }
+
+    ws.onmessage = evt => {
+        let data = JSON.parse(evt.data);
+
+        if (isUser("{{ .user.username }}", data.from)) {
+            let div = document.createElement("div");
+            let div2 = document.createElement("div");
+            let p = document.createElement("p")
+            let h5 = document.createElement("h5")
+            let span = document.createElement("span");
+
+            span.innerText = data.timestamp
+            p.innerText = data.text;
+            h5.innerText = "You";
+
+            div2.appendChild(h5);
+            div2.appendChild(span);
+
+            div.classList.add("right");
+            div.appendChild(div2);
+            div.appendChild(p);
+            appendLog(div);
+        } else {
+            let ring = new Audio("/static/assets/sounds/ring.mp3");
+            ring.play();
+            getFullNameByUsername(data.from);
+            let div = document.createElement("div");
+            let div2 = document.createElement("div");
+            let p = document.createElement("p")
+            let h5 = document.createElement("h5")
+            let span = document.createElement("span");
+
+            let xhttp = new XMLHttpRequest();
+            xhttp.onload = function () {
+                let data = JSON.parse(this.responseText);
+                h5.innerText = data.message;
+            }
+
+            xhttp.open("GET", "/chat/{{ .room.ID }}?check-user-fullname=" + data.from);
+            xhttp.send();
+
+
+            p.innerText = data.text;
+            span.innerText = data.timestamp;
+
+            div2.appendChild(h5);
+            div2.appendChild(span)
+            div.classList.add("left");
+            div.appendChild(div2);
+            div.appendChild(p);
+            appendLog(div);
+        }
+    }
+
+    document.querySelector("#message-button").addEventListener("click", function () {
+        let messageInputDOM = document.querySelector("#message-input");
+        let message = messageInputDOM.value;
+
+        const xhttp = new XMLHttpRequest();
+        xhttp.open("POST", "/chat/{{ .room.ID }}", true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.send("room_id={{ .room.ID }}&sender_id={{ .user.id }}&text=" + message);
+
+        ws.send(JSON.stringify({
+            "from": "{{ .user.username }}",
+            "text": message,
+        }))
+
+        messageInputDOM.value = "";
+        messageInputDOM.focus();
+    });
+
+    function isUser(userID1, userID2) {
+        if (userID1 == userID2) {
+            return true
+        } else {
+            return false
+        }
+    }
+
+    function getFullNameByUsername(username) {
+        let xhttp = new XMLHttpRequest();
+        let fullname;
+        xhttp.onload = function () {
+            let data = JSON.parse(this.responseText);
+            console.log(data);
+            document.getElementById("fullname")
+        }
+
+        xhttp.open("GET", "/chat/{{ .room.ID }}?check-user-fullname={{ .user.username }}")
+        xhttp.send();
+
+        return fullname;
+    }
+</script>
+{{ end }}

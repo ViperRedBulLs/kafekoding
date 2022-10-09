@@ -1,0 +1,39 @@
+{{ define "title" }}Room Table{{ end }}
+
+{{ define "active_rooms" }}active{{ end }}
+
+{{ define "content" }}
+<div class="container pt-4">
+    <section class="mb-4">
+        <div class="card">
+            <div class="card-header py-3">
+                <h5 class="mb-0 text-center"><strong>Users</strong></h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Name</th>
+                                <th scope="col">Mentor ID</th>
+                                <th scope="col">Updated At</th>
+                                <th scope="col">Created At</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{ range .rooms }}
+                            <tr>
+                                <th scope="row"><a href="#">{{ .Name }}</a></th>
+                                <td>{{ .MentorID }}</td>
+                                <td>{{ .UpdatedAt }}</td>
+                                <td>{{ .CreatedAt }}</td>
+                            </tr>
+                            {{ end }}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{{ end }}
