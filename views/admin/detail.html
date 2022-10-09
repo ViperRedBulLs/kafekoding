@@ -10,7 +10,12 @@
                 <h5 class="mb-0 text-center"><strong>Data of {{ .u.Username }}</strong></h5>
             </div>
             <div class="card-body">
-                <form action="" method="post" enctype="multipart/form-data">
+                {{ if .flash.Type }}
+                <div class="alert alert-{{ .flash.Type }}">
+                    {{ .flash.Message }}
+                </div>
+                {{ end }}
+                <form action="/admin/edit/users" method="post">
                     <input type="hidden" name="id" value="{{ .u.ID }}">
                     <div class="row mb-4">
                         <div class="col">
@@ -91,7 +96,7 @@
                             <div class="form-outline">
                                 <i class="fas fa-calendar trailing"></i>
                                 <input type="datetime" name="last_login" id="last_login"
-                                    class="form-control form-icon-trailing" value="{{ .u.LastLogin }}">
+                                    class="form-control form-icon-trailing" value="{{ .u.LastLogin }}" readonly>
                                 <label for="last_login" class="form-label">Last login</label>
                             </div>
                         </div>
@@ -99,7 +104,7 @@
                             <div class="form-outline">
                                 <i class="fas fa-calendar trailing"></i>
                                 <input type="datetime" name="date_joined" id="date_joined"
-                                    class="form-control form-icon-trailing" value="{{ .u.DateJoined }}">
+                                    class="form-control form-icon-trailing" value="{{ .u.DateJoined }}" readonly>
                                 <label for="date_joined" class="form-label">Date Joined</label>
                             </div>
                         </div>
@@ -121,10 +126,15 @@
     <section class="mb-4">
         <div class="card shadow">
             <div class="card-header bg-dark py-3 text-white">
-                <h5 class="mb-0 text-center">Data of {{ .room.Name }}'s Room</h5>
+                <h5 class="mb-0 text-center">Data of <a href="/room/{{ .room.Name }}">{{ .room.Name }}'s</a> Room</h5>
             </div>
             <div class="card-body">
-                <form action="" method="post" enctype="multipart/form-data">
+                {{ if .flash.Type }}
+                <div class="alert alert-{{ .flash.Type }}">
+                    {{ .flash.Message }}
+                </div>
+                {{ end }}
+                <form action="/admin/edit/rooms" method="post" enctype="multipart/form-data">
                     <div class="row mb-4">
                         <div class="col">
                             <input type="hidden" name="id" value="{{ .room.ID }}">
@@ -159,8 +169,9 @@
                     <div class="row mb-4">
                         <div class="col">
                             <label for="logo" class="form-label">Logo</label>
-                            <input type="file" name="logo" id="logo" class="form-control">
-                            <div class="form-text"><a href="{{ .room.Logo }}">{{ .room.Logo }}</a></div>
+                            <input type="file" name="logo" id="logo" class="form-control" required>
+                            <div class="form-text"><a href="{{ .room.Logo }}">{{ .room.Logo }}. Please upload file
+                                    again...</a></div>
                         </div>
                         <div class="col">
                             <div class="form-outline">
@@ -191,7 +202,7 @@
                             <div class="form-outline">
                                 <i class="fas fa-calendar trailing"></i>
                                 <input type="datetime" name="updated_at" id="updated_at"
-                                    class="form-control form-icon-trailing" value=" {{ .room.UpdatedAt }}">
+                                    class="form-control form-icon-trailing" value=" {{ .room.UpdatedAt }}" readonly>
                                 <label for="updated_at" class="form-label">Updated At</label>
                             </div>
                         </div>
