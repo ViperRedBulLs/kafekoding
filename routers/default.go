@@ -25,6 +25,9 @@ func AdminRouter(r *gin.RouterGroup) {
 	r.POST("/login", handlers.AdminLogin())
 	r.GET("/detail", handlers.AdminDetail)
 	r.GET("/", handlers.AdminIndex())
+
+	r.POST("/edit/users", handlers.AdminPOSTUser)
+	r.POST("/edit/rooms", handlers.AdminPOSTRoom)
 }
 
 func ChatRouter(r *gin.Engine) {
